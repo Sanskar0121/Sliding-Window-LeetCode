@@ -1,0 +1,114 @@
+CODE : 
+class Solution:
+    def characterReplacement(self, s: str, k: int) -> int:
+        count = {} 
+        res = 0 
+
+        l = 0
+        maxf = 0 
+        for r in range(len(s)):
+            count[s[r]] = 1 + count.get(s[r], 0)
+            maxf = max(maxf, count[s[r]])
+
+            while (r - l + 1) - maxf > k:
+                count[s[l]] -= 1 
+                l += 1 
+            res = max(res, r - l + 1) 
+
+        return res
+EXPLANATION :
+
+Absolutely! This is another great use of the sliding window technique — this time applied to the problem:
+
+🧾 Problem:
+"Longest Repeating Character Replacement"
+Given a string s and an integer k, you can replace at most k characters to make all characters in a substring the same.
+You need to return the length of the longest valid substring.
+
+✅ Code:
+python
+Copy code
+class Solution:
+    def characterReplacement(self, s: str, k: int) -> int:
+        count = {}
+        res = 0
+
+        l = 0
+        maxf = 0
+        for r in range(len(s)):
+            count[s[r]] = 1 + count.get(s[r], 0)
+            maxf = max(maxf, count[s[r]])
+
+            while (r - l + 1) - maxf > k:
+                count[s[l]] -= 1
+                l += 1
+            res = max(res, r - l + 1)
+
+        return res
+🧠 Step-by-Step Explanation:
+📦 Variables:
+count: A dictionary to store frequency of each character in the current window.
+
+l: Left pointer of the sliding window.
+
+maxf: Frequency of the most frequent character in the window.
+
+res: Stores the length of the longest valid substring found.
+
+🔁 Looping Through Each Character:
+python
+Copy code
+for r in range(len(s)):
+r is the right pointer.
+
+📊 Update frequency count:
+python
+Copy code
+count[s[r]] = 1 + count.get(s[r], 0)
+maxf = max(maxf, count[s[r]])
+Adds the character s[r] to the count dictionary.
+
+Updates maxf, which keeps track of the highest frequency character in the current window.
+
+❌ When to shrink the window:
+python
+Copy code
+while (r - l + 1) - maxf > k:
+(r - l + 1) = length of the current window.
+
+If the number of non-majority characters > k, we cannot fix it with k replacements.
+
+So we shrink the window from the left.
+
+python
+Copy code
+    count[s[l]] -= 1
+    l += 1
+✅ Update result:
+python
+Copy code
+res = max(res, r - l + 1)
+Keeps track of the maximum valid window size.
+
+🧩 Example Dry Run:
+Input: s = "AABABBA", k = 1
+
+Let's trace with a few steps:
+
+r	s[r]	count	maxf	Window (r-l+1)	Condition → Shrink?	res
+0	A	{A:1}	1	1	0 ≤ 1 → No	1
+1	A	{A:2}	2	2	0 ≤ 1 → No	2
+2	B	{A:2, B:1}	2	3	1 ≤ 1 → No	3
+3	A	{A:3, B:1}	3	4	1 ≤ 1 → No	4
+4	B	{A:3, B:2}	3	5	2 > 1 → Yes	
+remove A (A:2)	3	l = 1		4
+5	B	{A:2, B:3}	3	5	2 > 1 → Yes	
+remove A (A:1)	3	l = 2		4
+6	A	{A:2, B:3}	3	5	2 > 1 → Yes	
+remove B (B:2)	3	l = 3		4
+Final res = 4
+
+Longest substring we can make uniform with 1 change is "ABAB" or "BABB".
+
+💡 Key Idea:
+We don't always shrink on every mismatch — only when the number of changes required exceeds k.
