@@ -1,0 +1,135 @@
+CODE: 
+class Solution:
+    def checkInclusion(self, s1: str, s2: str) -> bool:
+        if len(s1) > len(s2):
+            return False
+        
+        s1Count, s2Count = [0] * 26, [0] * 26
+        for i in range(len(s1)):
+            s1Count[ord(s1[i]) - ord('a')] += 1
+            s2Count[ord(s2[i]) - ord('a')] += 1
+        
+        matches = 0
+        for i in range(26):
+            matches += (1 if s1Count[i] == s2Count[i] else 0)
+        
+        l = 0
+        for r in range(len(s1), len(s2)):
+            if matches == 26:
+                return True
+            
+            index = ord(s2[r]) - ord('a')
+            s2Count[index] += 1
+            if s1Count[index] == s2Count[index]:
+                matches += 1
+            elif s1Count[index] + 1 == s2Count[index]:
+                matches -= 1
+
+            index = ord(s2[l]) - ord('a')
+            s2Count[index] -= 1
+            if s1Count[index] == s2Count[index]:
+                matches += 1
+            elif s1Count[index] - 1 == s2Count[index]:
+                matches -= 1
+            l += 1
+        return matches == 26
+
+        Explanation :
+        This code is solving the "Permutation in String" problem (from Leetcode). You're given two strings, s1 and s2, and you need to check if a permutation of s1 exists as a substring in s2.
+
+Let’s walk through the code step-by-step with explanation:
+
+🔍 Objective:
+Check if s2 contains a substring which is a permutation of s1.
+
+A permutation means rearranged letters — so both strings must have the same character counts, just possibly in different order.
+
+✅ Step 1: Early Return if Impossible
+python
+Copy code
+if len(s1) > len(s2):
+    return False
+If s1 is longer than s2, there's no way a permutation of s1 could fit inside s2, so return False immediately.
+
+🧮 Step 2: Initialize Frequency Counts
+python
+Copy code
+s1Count, s2Count = [0] * 26, [0] * 26
+for i in range(len(s1)):
+    s1Count[ord(s1[i]) - ord('a')] += 1
+    s2Count[ord(s2[i]) - ord('a')] += 1
+Create two frequency arrays of size 26 (for each lowercase alphabet letter).
+
+s1Count counts characters in s1.
+
+s2Count counts the first len(s1) characters in s2 — this is our initial sliding window.
+
+🎯 Step 3: Count Initial Matches
+python
+Copy code
+matches = 0
+for i in range(26):
+    matches += (1 if s1Count[i] == s2Count[i] else 0)
+We count how many characters have the same frequency in s1Count and s2Count.
+
+If all 26 characters match, s2 contains a permutation of s1.
+
+🔁 Step 4: Slide the Window
+python
+Copy code
+l = 0
+for r in range(len(s1), len(s2)):
+    if matches == 26:
+        return True
+Start sliding a window of size len(s1) from left to right.
+
+At each step, remove the leftmost character and add the rightmost one.
+
+Add New Character to Window
+python
+Copy code
+index = ord(s2[r]) - ord('a')
+s2Count[index] += 1
+if s1Count[index] == s2Count[index]:
+    matches += 1
+elif s1Count[index] + 1 == s2Count[index]:
+    matches -= 1
+We update the frequency for the new right character.
+
+Then we check if it makes s1Count and s2Count match better or worse.
+
+Remove Left Character from Window
+python
+Copy code
+index = ord(s2[l]) - ord('a')
+s2Count[index] -= 1
+if s1Count[index] == s2Count[index]:
+    matches += 1
+elif s1Count[index] - 1 == s2Count[index]:
+    matches -= 1
+l += 1
+Update the frequency for the character we slid out.
+
+Adjust the matches count accordingly.
+
+🧪 Final Check
+python
+Copy code
+return matches == 26
+After sliding through the entire string, return True if all 26 character frequencies matched at any point.
+
+📌 Time & Space Complexity:
+Time: O(N), where N = len(s2)
+
+Space: O(1), since arrays are fixed size 26
+
+🧠 Summary
+The code uses:
+
+Sliding Window of size len(s1)
+
+Two frequency arrays to count characters
+
+A matches counter to avoid comparing all characters every time
+
+This is a very efficient solution! 
