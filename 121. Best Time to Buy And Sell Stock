@@ -1,0 +1,91 @@
+CODE : 
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        l, r = 0, 1
+        maxP = 0 
+
+        while r < len(prices):
+            if prices[l] < prices[r]:
+                profit = prices[r] - prices[l] 
+                maxP = max(maxP, profit) 
+            else:
+                l = r 
+            r += 1
+        return maxP 
+
+EXPLANATION 
+Sure! Let's break down this code step by step in a simple way:
+
+This code is solving the "Best Time to Buy and Sell Stock" problem.
+
+❓ What is the problem?
+You are given a list of stock prices where prices[i] is the price of the stock on day i.
+You need to find the maximum profit you can make by buying on one day and selling on another later day.
+You can't sell before you buy.
+
+✅ Code Explanation:
+python
+Copy code
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+This defines a function maxProfit inside a class Solution. It takes a list prices as input.
+
+python
+Copy code
+        l, r = 0, 1
+        maxP = 0 
+l = left pointer = the buy day (starts at day 0).
+
+r = right pointer = the sell day (starts at day 1).
+
+maxP = maximum profit found so far (starts at 0).
+
+python
+Copy code
+        while r < len(prices):
+This loop continues while r is within the list of prices.
+
+python
+Copy code
+            if prices[l] < prices[r]:
+This checks: Is the price on the buy day less than the sell day?
+If yes, it's a valid profit-making opportunity.
+
+python
+Copy code
+                profit = prices[r] - prices[l] 
+                maxP = max(maxP, profit) 
+Calculate profit.
+
+Update maxP if this profit is greater than the previous maximum.
+
+python
+Copy code
+            else:
+                l = r 
+If the current selling price is less than or equal to the buying price, then it's not a good deal.
+So, move the buy day to the current day (l = r) — maybe future days will give better profit.
+
+python
+Copy code
+            r += 1
+Always move the sell day to the next day.
+
+python
+Copy code
+        return maxP
+Return the maximum profit found.
+
+🔁 Example:
+prices = [7, 1, 5, 3, 6, 4]
+
+Buy at 1 (day 1), sell at 6 (day 4) → profit = 5 → this is the best deal.
+
+🔑 Summary:
+This code is a two-pointer sliding window solution:
+
+l = buying day
+
+r = selling day
+
+It keeps updating the best possible profit without going back in time.
